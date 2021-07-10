@@ -45,10 +45,6 @@ class Music(commands.Cog):
     async def stop(self, ctx):
         await ctx.voice_client.disconnect()
         
-    @commands.command()
-    async def help(self, ctx):
-        await ctx.send("Ich lutsche Ihren Schwanz und spiele Musik \n**join** <channel name> \n**play** <local file name> \n**stream** <video link> \n**volume** <0-100> \n**stop** \n**Herr Benz** wenn sie mit mir reden wollen**")
-        
     @play.before_invoke
     @stream.before_invoke
     async def ensure_voice(self, ctx):
