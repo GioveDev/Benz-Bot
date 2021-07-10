@@ -1,7 +1,11 @@
 Install python
 Install ffmpeg and make it usable systemwide (Windows: Add to path Environment variable) (Linux: i don't fucking know, you should know how to use something systemwide)
 
-Open the .env and put the key from #coding there
+Create a file called .env inside the same folder as BenzBot V2.py, copy the following inside and get the token from #coding
+
+# .env
+DISCORD_TOKEN=Token Comes Here!
+
 pip install all necessary dependencies
 
 then run this line:
