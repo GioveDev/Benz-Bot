@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
 
 from Functions import YTDL
 
@@ -57,5 +58,14 @@ class Music(commands.Cog):
         elif ctx.voice_client.is_playing():
             ctx.voice_client.stop()
             
+    @cog_ext.cog_slash(name="test", guild_ids= [170601909349122049] )
+    async def _test(self, ctx, url: SlashContext):
+        vc = await ctx.author.voice.channel.connect()
+        
+        player = await YTDL.Source.from_url(url, loop=self.bot.loop, stream=True)
+        vc.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
+        
+        await ctx.send("Playing")
+
 def setup(bot):
     bot.add_cog(Music(bot))
