@@ -1,4 +1,5 @@
 import discord
+import discord.ext
 from discord.ext import commands
 from discord_slash import cog_ext, SlashContext
 
@@ -17,20 +18,25 @@ class Music(commands.Cog):
         await channel.connect()
 
     @commands.command()
-    async def play(self, ctx, *, query):
+    async def play(self, ctx, *, url):
 
-        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
+        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(url))
         ctx.voice_client.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
 
-        await ctx.send(f'Now playing: {query}')
+        await ctx.send(f'Now playing: {url}')
 
-    @commands.command()
-    async def stream(self, ctx, *, url):
+    async def stream(self, ctx, url):
+        voice_channel = await self.ensure_voice(ctx)
 
-        async with ctx.typing():
+        if type(ctx) is commands.context.Context:
+            text_channel = ctx.message.channel
+        else:
+            text_channel = self.bot.get_channel(ctx.channel_id)
+
+        async with text_channel.typing():
             player = await YTDL.Source.from_url(url, loop=self.bot.loop, stream=True)
-            ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
-
+            voice_channel.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
+        
         await ctx.send(f'Now playing: {player.title}')
 
     @commands.command()
@@ -45,27 +51,34 @@ class Music(commands.Cog):
     @commands.command()
     async def stop(self, ctx):
         await ctx.voice_client.disconnect()
+
+    @commands.command(name="stream")
+    async def command_stream(self,ctx, *, url):
+        await self.stream(ctx, url)
+
+    @cog_ext.cog_slash(name="stream", guild_ids= [170601909349122049] )
+    async def slash_stream(self, ctx, url):
+        await self.stream(ctx, url)
         
-    @play.before_invoke
-    @stream.before_invoke
     async def ensure_voice(self, ctx):
-        if ctx.voice_client is None:
+        if type(ctx) is commands.context.Context:
+            voice_client = ctx.voice_client
+        else:
+            guild = self.bot.get_guild(ctx.guild_id)
+            voice_client = guild.voice_client
+
+        if voice_client is None:
             if ctx.author.voice:
-                await ctx.author.voice.channel.connect()
+                voice_channel = await ctx.author.voice.channel.connect()
+                return voice_channel
             else:
                 await ctx.send("You are not connected to a voice channel.")
                 raise commands.CommandError("Author not connected to a voice channel.")
-        elif ctx.voice_client.is_playing():
-            ctx.voice_client.stop()
+        elif voice_client.is_playing():
+            voice_client.stop()
+            return voice_client
+
             
-    @cog_ext.cog_slash(name="test", guild_ids= [170601909349122049] )
-    async def _test(self, ctx, url: SlashContext):
-        vc = await ctx.author.voice.channel.connect()
-        
-        player = await YTDL.Source.from_url(url, loop=self.bot.loop, stream=True)
-        vc.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
-        
-        await ctx.send("Playing")
 
 def setup(bot):
     bot.add_cog(Music(bot))
