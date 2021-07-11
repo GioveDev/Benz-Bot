@@ -1,6 +1,6 @@
 from discord.ext import commands
 
-class Functions(commands.Cog):
+class VoiceChannelExtensions(commands.Cog):
     @classmethod
     async def ensure_voice(cls, bot, ctx):
         voice_client = cls.get_voice_client(bot, ctx)

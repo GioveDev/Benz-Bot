@@ -2,14 +2,14 @@ import discord
 from discord.ext import commands
 from discord_slash import cog_ext
 
-from Functions.Music import Extensions
+from Functions.Music.MusicExtensions import VoiceChannelExtensions
 
 class Play(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     async def play(self, ctx, url):
-        voice_client = await Extensions.Functions.ensure_voice(self.bot, ctx)
+        voice_client = await VoiceChannelExtensions.ensure_voice(self.bot, ctx)
 
         source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(url))
         voice_client.play(source, after=lambda e: print(f'Player error: {e}') if e else None)

@@ -2,14 +2,14 @@ import discord
 from discord.ext import commands
 from discord_slash import cog_ext
 
-from Functions.Music import Extensions
+from Functions.Music.MusicExtensions import VoiceChannelExtensions
 
 class Join(commands.Cog):
     def __init__(self, bot):
             self.bot = bot
 
     async def join(self, ctx, channel):
-        voice_client = Extensions.Functions.get_voice_client(self.bot, ctx)
+        voice_client = VoiceChannelExtensions.get_voice_client(self.bot, ctx)
 
         if voice_client is not None:
             return await voice_client.move_to(channel)

@@ -1,8 +1,7 @@
 from discord.ext import commands
 from discord_slash import cog_ext
 
-from Functions.Music import Extensions
-
+from Functions.Music.MusicExtensions import VoiceChannelExtensions
 class Stop(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -14,7 +13,7 @@ class Stop(commands.Cog):
     
     @cog_ext.cog_slash(name = "stop", description = "Leave channel")
     async def slash_stop(self, ctx):
-        voice_client = Extensions.Functions.get_voice_client(self.bot, ctx)
+        voice_client = VoiceChannelExtensions.get_voice_client(self.bot, ctx)
         await voice_client.disconnect()
         await ctx.send("Leaving")
 

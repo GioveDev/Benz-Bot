@@ -2,14 +2,14 @@
 from discord.ext import commands
 from discord_slash import cog_ext
 
-from Functions.Music import Extensions
+from Functions.Music.MusicExtensions import VoiceChannelExtensions
 
 class Volume(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     async def volume(self, ctx, volume):
-        voice_client = Extensions.Functions.get_voice_client(self.bot, ctx)
+        voice_client = VoiceChannelExtensions.get_voice_client(self.bot, ctx)
 
         if voice_client is None:
             return await ctx.send("Not connected to a voice channel.")

@@ -3,14 +3,14 @@ from discord.ext import commands
 from discord_slash import cog_ext
 
 from Functions import YTDL
-from Functions.Music import Extensions
+from Functions.Music.MusicExtensions import VoiceChannelExtensions
 
 class Stream(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     async def stream(self, ctx, url):
-        voice_client = await Extensions.Functions.ensure_voice(self.bot, ctx)
+        voice_client = await VoiceChannelExtensions.ensure_voice(self.bot, ctx)
 
         if type(ctx) is commands.context.Context:
             text_channel = ctx.message.channel
