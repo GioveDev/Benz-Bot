@@ -49,6 +49,9 @@ class Music(commands.Cog):
         if voice_client is None:
             return await ctx.send("Not connected to a voice channel.")
 
+        if voice_client.source is None:
+            return await ctx.send("No Audio Playing")
+
         voice_client.source.volume = volume / 100
         await ctx.send(f"Changed volume to {volume}%")
     
@@ -109,11 +112,13 @@ class Music(commands.Cog):
     @commands.command(name = "stop")
     async def command_stop(self, ctx):
         await ctx.voice_client.disconnect()
+        await ctx.send("Leaving")
     
     @cog_ext.cog_slash(name = "stop", guild_ids= [170601909349122049] )
     async def slash_stop(self, ctx):
         voice_client = self.get_voice_client(ctx)
         await voice_client.disconnect()
+        await ctx.send("Leaving")
 
 def setup(bot):
     bot.add_cog(Music(bot))
