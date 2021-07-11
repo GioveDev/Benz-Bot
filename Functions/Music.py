@@ -1,9 +1,8 @@
 from re import A
 import discord
-from discord import voice_client
 import discord.ext
 from discord.ext import commands
-from discord_slash import cog_ext, SlashContext
+from discord_slash import cog_ext
 
 from Functions import YTDL
 
@@ -21,7 +20,7 @@ class Music(commands.Cog):
         await ctx.send(f'Joining {channel}')
 
     async def play(self, ctx, url):
-        voice_client = self.get_voice_client(ctx)
+        voice_client = await self.ensure_voice(ctx)
 
         source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(url))
         voice_client.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
@@ -81,7 +80,7 @@ class Music(commands.Cog):
     async def command_join(self, ctx, *, channel: discord.VoiceChannel):
         await self.join(ctx, channel)
 
-    @cog_ext.cog_slash(name = "join", guild_ids= [170601909349122049] )
+    @cog_ext.cog_slash(name = "join", description = "Join a channel")
     async def slash_join(self, ctx, channel: discord.VoiceChannel):
         await self.join(ctx, channel)
 
@@ -89,7 +88,7 @@ class Music(commands.Cog):
     async def command_play(self, ctx, *, url):
         await self.play(ctx, url)
 
-    @cog_ext.cog_slash(name = "play", guild_ids= [170601909349122049] )
+    @cog_ext.cog_slash(name = "play", description = "Play a file from the local system")
     async def slash_play(self, ctx, url):
         await self.play(ctx, url)
 
@@ -97,7 +96,7 @@ class Music(commands.Cog):
     async def command_stream(self, ctx, *, url):
         await self.stream(ctx, url)
 
-    @cog_ext.cog_slash(name = "stream", guild_ids= [170601909349122049] )
+    @cog_ext.cog_slash(name = "stream", description = "Stream audio from URL")
     async def slash_stream(self, ctx, url):
         await self.stream(ctx, url)
 
@@ -105,7 +104,7 @@ class Music(commands.Cog):
     async def command_volume(self, ctx, volume: int):
         await self.volume(ctx, volume)
 
-    @cog_ext.cog_slash(name = "volume", guild_ids= [170601909349122049] )
+    @cog_ext.cog_slash(name = "volume", description = "Change volume")
     async def slash_volume(self, ctx, volume: int):
         await self.volume(ctx, volume)
 
@@ -114,7 +113,7 @@ class Music(commands.Cog):
         await ctx.voice_client.disconnect()
         await ctx.send("Leaving")
     
-    @cog_ext.cog_slash(name = "stop", guild_ids= [170601909349122049] )
+    @cog_ext.cog_slash(name = "stop", description = "Leave channel")
     async def slash_stop(self, ctx):
         voice_client = self.get_voice_client(ctx)
         await voice_client.disconnect()
