@@ -1,8 +1,7 @@
-import discord
 from discord.ext import commands
 from discord_slash import cog_ext
 
-from Functions import YTDL
+from Functions.Music.YTDL import Source
 from Functions.Music.MusicExtensions import VoiceChannelExtensions
 
 class Stream(commands.Cog):
@@ -18,7 +17,7 @@ class Stream(commands.Cog):
             text_channel = self.bot.get_channel(ctx.channel_id)
 
         async with text_channel.typing():
-            player = await YTDL.Source.from_url(url, loop=self.bot.loop, stream=True)
+            player = await Source.from_url(url, loop=self.bot.loop, stream=True)
             voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
         
         await ctx.send(f'Now playing: {player.title}')
