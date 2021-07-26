@@ -16,7 +16,7 @@ class CleverBotChat(commands.Cog):
 
             try:
                 async with message.channel.typing():
-                    reply = requests.get("http://192.168.1.30:5000/chat", params = { 'message':message_string })
+                    reply = requests.get("", params = { '': })
                     reply_text = json.loads(reply.text)
             except JSONDecodeError:
                 await message.channel.send("An error has occurred, if this issue persists contact my master")
