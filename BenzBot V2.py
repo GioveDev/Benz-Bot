@@ -14,6 +14,7 @@ slash = SlashCommand(bot, sync_commands=True)
 
 bot.load_extension("Functions.Base")
 bot.load_extension("Functions.Talk")
+bot.load_extension("Functions.CleverBotChat.CleverBotChat")
 bot.load_extension("Functions.Music.Join")
 bot.load_extension("Functions.Music.Play")
 bot.load_extension("Functions.Music.Stream")
