@@ -1,12 +1,10 @@
-import asyncio
-from json.decoder import JSONDecodeError
-import cleverbotfree
-from discord.ext import commands
-
 import json
+from json.decoder import JSONDecodeError
 import requests
 
-#Honestly this is fucking jank but it works
+from discord.ext import commands
+
+error_message = "An error has occurred, if this issue persists contact my master"
 
 class CleverBotChat(commands.Cog):
     @commands.Cog.listener()
@@ -18,10 +16,9 @@ class CleverBotChat(commands.Cog):
                 async with message.channel.typing():
                     reply = requests.get("", params = { '': })
                     reply_text = json.loads(reply.text)
-            except JSONDecodeError:
-                await message.channel.send("An error has occurred, if this issue persists contact my master")
+
             except requests.ConnectionError:
-                await message.channel.send("An error has occurred, if this issue persists contact my master")
+                await message.channel.send(error_message)
 
             await message.channel.send(reply_text)
 
