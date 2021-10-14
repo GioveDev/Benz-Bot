@@ -9,7 +9,7 @@ error_message = "An error has occurred, if this issue persists contact my master
 class CleverBotChat(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.content.startswith('Herr Benz '):
+        if message.content.startswith('Herr Benz ') or self.user in message.mentions:
             message_string = message.content[10:]
 
             try:
