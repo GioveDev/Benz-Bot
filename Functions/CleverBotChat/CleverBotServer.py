@@ -1,25 +1,25 @@
 from flask import Flask, json
 from flask.globals import request
-import pexpect
 
+import cleverbotfree
+
+from gevent import monkey
+monkey.patch_all()
 
 api = Flask(__name__)
 
-child = pexpect.spawn('python3 CleverbotFree.py')
+p_w = cleverbotfree.sync_playwright().__enter__()
+c_b = cleverbotfree.Cleverbot(p_w)
+p_w.stop
 
 @api.route('/chat', methods = ['GET'])
 def GetReply():
     message = request.args.get('message', default=0, type = str)
     
-    child.sendline(message)
-    child.expect('Cleverbot:')
-    reply = str(child.readline())
-    
-    truncated_reply = reply[3:]
-    sanitized_reply = truncated_reply.split('\\',1)
-    
-    if sanitized_reply[0] and not sanitized_reply[0].isspace():
-        return json.dumps(sanitized_reply[0])
+    reply = c_b.single_exchange(message)
+
+    if reply:
+        return json.dumps(reply)
     else:
         return json.dumps("something went wrong try again")
 
