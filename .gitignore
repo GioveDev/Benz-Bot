@@ -4,3 +4,5 @@
 /.env
 /Functions/Music/__pycache__/
 /.idea
+
+/Functions/Selenium/__pycache__/
