@@ -14,7 +14,7 @@ class CleverBotChat(commands.Cog):
 
             try:
                 async with message.channel.typing():
-                    reply = requests.get("", params = { '': })
+                    reply = requests.get("", params = { '': ''})
                     reply_text = json.loads(reply.text)
 
             except requests.ConnectionError:

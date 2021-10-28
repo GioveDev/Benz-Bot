@@ -1,7 +1,7 @@
 from discord.ext import commands
 from discord_slash import cog_ext
 
-description_string = "Ich lutsche Ihren Schwanz und spiele Musik \n-**join** <channel name> \n-**play** <local file name> \n-**stream** <video link> \n-**volume** <0-100> \n-**stop** \n-**Herr Benz** wenn sie mit mir reden wollen"
+description_string = "Ich lutsche Ihren Schwanz und spiele Musik \n-**join** <channel name> \n-**play** <local file name> \n-**stream** <video link or youtube query> \n-**volume** <0-100> \n-**stop** \n-**bereso** i'll check if bereso is done \n-**Herr Benz** wenn sie mit mir reden wollen"
 
 class Base(commands.Cog):
     @commands.Cog.listener()
