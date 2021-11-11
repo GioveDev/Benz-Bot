@@ -1,3 +1,4 @@
+import discord.errors
 from discord.ext import commands
 from discord_slash import cog_ext
 
@@ -16,11 +17,15 @@ class Stream(commands.Cog):
         else:
             text_channel = self.bot.get_channel(ctx.channel_id)
 
-        async with text_channel.typing():
-            player = await Source.from_url(url, loop=self.bot.loop, stream=True)
-            voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
-        
-        await ctx.send(f'Now playing: {player.title}')
+        try:
+            async with text_channel.typing():
+                player = await Source.from_url(url, loop=self.bot.loop, stream=True)
+                voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
+
+            await ctx.send(f'Now playing: {player.title}')
+
+        except discord.errors.NotFound:
+            ctx.send("Playing audio with unknown or unreadable title")
 
     @commands.command(name = "stream")
     async def command_stream(self, ctx, *, url):
